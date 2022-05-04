@@ -3,22 +3,23 @@ import { useState, useEffect } from 'react';
 import VillagerCard from './Components/VillagerCard';
 
 import { Box, Container, Grid, Typography } from '@mui/material';
+import LazyLoad from 'react-lazyload';
 
 const App = () => {
-	const [pokes, setPokes] = useState([]);
+	const [villagers, setVillagers] = useState([]);
 
-	const getPokes = async () => {
+	const getVillagers = async () => {
 		const response = await fetch('http://acnhapi.com/v1/villagers/').then(
 			response => response.json()
 		);
 
 		const rspArr = Object.entries(response);
 
-		setPokes(rspArr);
+		setVillagers(rspArr);
 	};
 
 	useEffect(() => {
-		getPokes();
+		getVillagers();
 	}, []);
 
 	return (
@@ -29,9 +30,11 @@ const App = () => {
 
 			<Box>
 				<Grid container spacing={2}>
-					{pokes.map(data => (
+					{villagers.map(data => (
 						<Grid item xs={6} s={4} md={3} key={data[0]}>
-							<VillagerCard data={data} bordered />
+							<LazyLoad height={200} once>
+								<VillagerCard data={data} bordered />
+							</LazyLoad>
 						</Grid>
 					))}
 				</Grid>
